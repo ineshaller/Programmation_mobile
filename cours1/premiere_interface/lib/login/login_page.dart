@@ -1,5 +1,6 @@
 import 'package:cours_01/res/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -27,23 +28,14 @@ class LoginPage extends StatelessWidget {
               onPressed: (){},
             ),
             SizedBox(height: 32),
+            OrSeparator(),
+            SizedBox(height: 32),
             ContinuerAvecButton(
               label: "Continue with Apple",
               iconPath: "assets/apple_logo.svg",
               onPressed: (){},
             ),
             SizedBox(height: 16),
-            ContinuerAvecButton(
-              label: "Continue with Google",
-              iconPath: "assets/google_logo.svg",
-              onPressed: (){},
-            ),
-            SizedBox(height: 16),
-            ContinuerAvecButton(
-              label: "Continue with Facebook",
-              iconPath: "assets/facebook_logo.svg",
-              onPressed: (){},
-            ),
           ],
         ),
       )
@@ -148,13 +140,24 @@ class ContinuerAvecButton extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(onPressed: onPressed, child: Row(
-      children: [
-        Image.asset(iconPath, width:20),
-        SizedBox(width: 12),
-        Text(label)
-      ],
-      )
-      );
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: onPressed,
+        icon: SvgPicture.asset(
+          iconPath,
+          width: 24,
+          height: 24,
+        ),
+        label: Text(
+          label,
+          style: TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+     ),
+    );
   }
 }
