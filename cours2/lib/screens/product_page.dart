@@ -13,66 +13,76 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          height: 200,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-            image: DecorationImage(
-              image: NetworkImage(
-                'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=1310&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-              ),
-              fit: BoxFit.cover,
-            ),
-          ),
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: MediaQuery.of(context).size.height,
         ),
-        Positioned(
-          top: 170,
-          left: 0,
-          right: 0,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
+        child: Stack(
+          children: [
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
+                ),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=1310&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                  ),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            child: Padding(
-              padding: EdgeInsets.only(top: 30, left: 20, right: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    productName,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.blue,
-                    ),
+            Positioned(
+              top: 170,
+              left: 0,
+              right: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    brandName,
-                    style: TextStyle(fontSize: 18, color: AppColors.grey2),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 30, left: 20, right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        productName,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.blue,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        brandName,
+                        style: TextStyle(fontSize: 18, color: AppColors.grey2),
+                      ),
+                      const SizedBox(height: 20),
+                      InfoVentes(
+                        label: 'Quantité',
+                        value: '200g (égoutté : 130g)',
+                      ),
+                      InfoVentes(
+                        label: 'Vendu',
+                        value: 'France',
+                        showDivider: false,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 20),
-                  InfoVentes(label: 'Quantité', value: '200g (égoutté : 130g)'),
-                  InfoVentes(
-                    label: 'Vendu',
-                    value: 'France',
-                    showDivider: false,
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
