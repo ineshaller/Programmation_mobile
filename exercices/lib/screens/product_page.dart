@@ -4,9 +4,23 @@ import 'package:formation_flutter/model/product.dart';
 import 'package:formation_flutter/res/app_colors.dart';
 import 'package:formation_flutter/res/app_icons.dart';
 import 'package:formation_flutter/res/app_theme_extension.dart';
+import 'package:provider/provider.dart';
 
-class ProductPage extends StatelessWidget {
-  const ProductPage({super.key});
+class ProductPageLoading extends StatelessWidget {
+  const ProductPageLoading({super.key});
+
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      body: Center(
+        child: CircularProgressIndicator()),
+    );
+  }
+}
+
+
+class ProductPageSuccess extends StatelessWidget {
+  const ProductPageSuccess({super.key});
 
   static const double IMAGE_HEIGHT = 300.0;
 

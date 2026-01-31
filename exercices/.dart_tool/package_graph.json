@@ -10,7 +10,8 @@
         "flutter",
         "flutter_localizations",
         "flutter_svg",
-        "intl"
+        "intl",
+        "provider"
       ],
       "devDependencies": [
         "flutter_lints",
@@ -69,6 +70,15 @@
         "flutter",
         "intl",
         "path"
+      ]
+    },
+    {
+      "name": "provider",
+      "version": "6.1.5+1",
+      "dependencies": [
+        "collection",
+        "flutter",
+        "nested"
       ]
     },
     {
@@ -206,6 +216,13 @@
         "http_parser",
         "meta",
         "web"
+      ]
+    },
+    {
+      "name": "nested",
+      "version": "1.0.0",
+      "dependencies": [
+        "flutter"
       ]
     },
     {
