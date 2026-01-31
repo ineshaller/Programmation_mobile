@@ -3,6 +3,8 @@ import 'package:formation_flutter/l10n/app_localizations.dart';
 import 'package:formation_flutter/res/app_colors.dart';
 import 'package:formation_flutter/res/app_theme_extension.dart';
 import 'package:formation_flutter/screens/product_page.dart';
+import 'provider/product_provider.dart';
+import 'model/product.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +26,10 @@ class MyApp extends StatelessWidget {
         textTheme: TextTheme(headlineMedium: TextStyle()),
       ),
       debugShowCheckedModeBanner: false,
-      home: const ProductPage(),
+      home: ProductProvider(
+        product: generateProduct(),
+        child: ProductPage(),
+      ),
     );
   }
 }
