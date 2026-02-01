@@ -25,7 +25,8 @@ class MyApp extends StatelessWidget {
         textTheme: TextTheme(headlineMedium: TextStyle()),
       ),
       debugShowCheckedModeBanner: false,
-      home: ProductPageLoading(),
+      home: ProductPage(),
+      //home: ProductPageLoading(),
       //home: ProductPageSuccess(),
     );
   }
