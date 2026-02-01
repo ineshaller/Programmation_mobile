@@ -1,4 +1,113 @@
 // ignore_for_file: constant_identifier_names
+import 'dart:convert';
+
+class ApiProduct {
+  final String barcode;
+  final String? name;
+  final String? altName;
+  final String? picture;
+  final String? quantity;
+
+  final List<String>? brands;
+  final List<String>? manufacturingCountries;
+
+  final String? nutriScore;
+  final dynamic nutriScoreLevels;
+  final String? novaScore;
+  final String? greenScore;
+
+  final List<String>? ingredients;
+  final String? ingredientsWithAllergens;
+  final List<String>? traces;
+  final List<String>? allergens;
+  final Map<String, String>? additives;
+
+  final dynamic nutrientLevels;
+  final dynamic nutritionFacts;
+
+  final bool? ingredientsFromPalmOil;
+
+  final dynamic containsPalmOil;
+  final String? isVegan;
+  final String? isVegetarian;
+
+  ApiProduct({
+    required this.barcode,
+    this.name,
+    this.altName,
+    this.picture,
+    this.quantity,
+    this.brands,
+    this.manufacturingCountries,
+    this.nutriScore,
+    this.nutriScoreLevels,
+    this.novaScore,
+    this.greenScore,
+    this.ingredients,
+    this.ingredientsWithAllergens,
+    this.traces,
+    this.allergens,
+    this.additives,
+    this.nutrientLevels,
+    this.nutritionFacts,
+    this.ingredientsFromPalmOil,
+    this.containsPalmOil,
+    this.isVegan,
+    this.isVegetarian,
+  });
+
+  factory ApiProduct.fromJSON(Map<String, dynamic> json) {
+    List<String> toStringList(dynamic valeur) {
+      if (valeur is List) return valeur.map((e) => e.toString()).toList();
+      return [];
+    }
+
+    Map<String, String>? toStringMap(dynamic valeur) {
+      if (valeur is Map) {
+        return valeur.map(
+          (key, value) => MapEntry(key.toString(), value.toString()),
+        );
+      }
+      return null;
+    }
+
+    bool? toBool(dynamic valeur) {
+      if (valeur is bool) return valeur;
+      if (valeur == null) return null;
+      final s = valeur.toString().toLowerCase();
+      if (s == 'true' || s == '1') return true;
+      if (s == 'false' || s == '0') return false;
+      return null;
+    }
+
+    return ApiProduct(
+      barcode: json['barcode']?.toString() ?? '',
+      name: json['name']?.toString(),
+      altName: json['altName']?.toString(),
+      picture: json['picture']?.toString(),
+      quantity: json['quantity']?.toString(),
+      brands: json['brands'] != null ? List<String>.from(json['brands']) : null,
+      manufacturingCountries: json['manufacturingCountries'] != null
+          ? List<String>.from(json['manufacturingCountries'])
+          : null,
+      nutriScore: json['nutriScore']?.toString(),
+      nutriScoreLevels: json['nutriScoreLevels'],
+      novaScore: json['novaScore']?.toString(),
+      greenScore: json['greenScore']?.toString(),
+      ingredients: json['ingredients'],
+      ingredientsWithAllergens: json['ingredientsWithAllergens']?.toString(),
+      traces: toStringList(json['traces']),
+      allergens: toStringList(json['allergens']),
+      additives: toStringMap(json['additives']),
+      nutrientLevels: json['nutrientLevels'],
+      ingredientsFromPalmOil: toBool(json['ingredientsFromPalmOil']),
+      containsPalmOil: toBool(json['containsPalmOil']),
+      isVegan: json['isVegan']?.toString(),
+      isVegetarian: json['isVegetarian']?.toString(),
+    );
+  }
+}
+
 class Product {
   final String barcode;
   final String? name;
@@ -49,6 +158,192 @@ class Product {
     this.isVegan,
     this.isVegetarian,
   });
+
+  factory Product.fromApi(ApiProduct apiProduct) {
+    return Product(
+      barcode: apiProduct.barcode,
+      name: apiProduct.name,
+      altName: apiProduct.altName,
+      picture: apiProduct.picture,
+      quantity: apiProduct.quantity,
+      brands: apiProduct.brands,
+      manufacturingCountries: apiProduct.manufacturingCountries,
+      nutriScore: _parseNutriScore(apiProduct.nutriScore),
+      nutriScoreLevels: _parseNutriScoreLevels(apiProduct.nutriScoreLevels),
+      nutritionFacts: _parseNutritionFacts(apiProduct.nutritionFacts),
+      novaScore: _parseNovaScore(apiProduct.novaScore),
+      greenScore: _parseGreenScore(apiProduct.greenScore),
+      ingredients: apiProduct.ingredients,
+      ingredientsWithAllergens: apiProduct.ingredientsWithAllergens,
+      traces: apiProduct.traces,
+      allergens: apiProduct.allergens,
+      additives: apiProduct.additives,
+      nutrientLevels: null,
+      ingredientsFromPalmOil: apiProduct.ingredientsFromPalmOil,
+      containsPalmOil: ProductAnalysis.fromString(
+        apiProduct.containsPalmOil?.toString(),
+      ),
+      isVegan: ProductAnalysis.fromString(apiProduct.isVegan),
+      isVegetarian: ProductAnalysis.fromString(apiProduct.isVegetarian),
+    );
+  }
+
+  Product.fromJSON(Map<String, dynamic> json)
+    : barcode = json['barcode'],
+      name = json['name'],
+      altName = json['altName'],
+      picture = json['picture'],
+      quantity = json['quantity'],
+      brands = json['brands'] != null
+          ? List<String>.from(json['brands'])
+          : null,
+      manufacturingCountries = json['manufacturingCountries'] != null
+          ? List<String>.from(json['manufacturingCountries'])
+          : null,
+      nutriScore = _parseNutriScore(json['nutriScore']),
+      nutriScoreLevels = _parseNutriScoreLevels(json['nutriScoreLevels']),
+      nutritionFacts = _parseNutritionFacts(json['nutritionFacts']),
+      novaScore = _parseNovaScore(json['novaScore']),
+      greenScore = _parseGreenScore(json['greenScore']),
+      ingredients = json['ingredients'] != null
+          ? List<String>.from(json['ingredients'])
+          : null,
+      ingredientsWithAllergens = json['ingredientsWithAllergens'],
+      traces = json['traces'] != null
+          ? List<String>.from(json['traces'])
+          : null,
+      allergens = json['allergens'] != null
+          ? List<String>.from(json['allergens'])
+          : null,
+      additives = json['additives'] != null
+          ? Map<String, String>.from(json['additives'])
+          : null,
+      nutrientLevels = null,
+      ingredientsFromPalmOil = json['ingredientsFromPalmOil'],
+      containsPalmOil = ProductAnalysis.fromString(json['containsPalmOil']),
+      isVegan = ProductAnalysis.fromString(json['isVegan']),
+      isVegetarian = ProductAnalysis.fromString(json['isVegetarian']);
+
+  static ProductNutriScore? _parseNutriScore(String? score) {
+    switch (score) {
+      case 'A':
+        return ProductNutriScore.A;
+      case 'B':
+        return ProductNutriScore.B;
+      case 'C':
+        return ProductNutriScore.C;
+      case 'D':
+        return ProductNutriScore.D;
+      case 'E':
+        return ProductNutriScore.E;
+      default:
+        return ProductNutriScore.unknown;
+    }
+  }
+
+  static ProductNovaScore? _parseNovaScore(String? score) {
+    switch (score) {
+      case 'group1':
+        return ProductNovaScore.group1;
+      case 'group2':
+        return ProductNovaScore.group2;
+      case 'group3':
+        return ProductNovaScore.group3;
+      case 'group4':
+        return ProductNovaScore.group4;
+      default:
+        return ProductNovaScore.unknown;
+    }
+  }
+
+  static ProductGreenScore? _parseGreenScore(String? score) {
+    switch (score) {
+      case 'A':
+        return ProductGreenScore.A;
+      case 'APlus':
+        return ProductGreenScore.APlus;
+      case 'B':
+        return ProductGreenScore.B;
+      case 'C':
+        return ProductGreenScore.C;
+      case 'D':
+        return ProductGreenScore.D;
+      case 'E':
+        return ProductGreenScore.E;
+      case 'F':
+        return ProductGreenScore.F;
+      default:
+        return ProductGreenScore.unknown;
+    }
+  }
+
+  static ProductNutriScoreLevels? _parseNutriScoreLevels(dynamic json) {
+    if (json == null || json is! Map) return null;
+    final map = Map<String, dynamic>.from(json);
+
+    ProductNutriScoreLevel? parseLevel(dynamic value) {
+      if (value == null || value is! Map) return null;
+      final m = Map<String, dynamic>.from(value);
+
+      return ProductNutriScoreLevel(
+        points: (m['points'] as num?)?.toDouble() ?? 0,
+        maxPoints: (m['maxPoints'] as num?)?.toDouble() ?? 0,
+        unit: m['unit']?.toString() ?? '',
+        value: (m['value'] as num?)?.toDouble() ?? 0,
+        type: m['type'] == 'positive'
+            ? ProductNutriScoreLevelType.positive
+            : m['type'] == 'negative'
+            ? ProductNutriScoreLevelType.negative
+            : ProductNutriScoreLevelType.unknown,
+      );
+    }
+
+    return ProductNutriScoreLevels(
+      energy: parseLevel(map['energy']),
+      fiber: parseLevel(map['fiber']),
+      fruitsVegetablesLegumes: parseLevel(map['fruitsVegetablesLegumes']),
+      proteins: parseLevel(map['proteins']),
+      salt: parseLevel(map['salt']),
+      saturatedFat: parseLevel(map['saturatedFat']),
+      sugars: parseLevel(map['sugars']),
+    );
+  }
+
+  static NutritionFacts? _parseNutritionFacts(dynamic json) {
+    if (json == null || json is! Map) {
+      return null;
+    }
+
+    final data = Map<String, dynamic>.from(json);
+
+    Nutriment? parseNutriment(dynamic value) {
+      if (value == null || value is! Map) {
+        return null;
+      }
+
+      final m = Map<String, dynamic>.from(value);
+
+      return Nutriment(
+        unit: m['unit']?.toString() ?? '',
+        perServing: m['perServing'],
+        per100g: m['per100g'],
+      );
+    }
+
+    return NutritionFacts(
+      servingSize: data['servingSize']?.toString() ?? '',
+      calories: parseNutriment(data['calories']),
+      fat: parseNutriment(data['fat']),
+      saturatedFat: parseNutriment(data['saturatedFat']),
+      carbohydrate: parseNutriment(data['carbohydrate']),
+      sugar: parseNutriment(data['sugar']),
+      fiber: parseNutriment(data['fiber']),
+      proteins: parseNutriment(data['proteins']),
+      sodium: parseNutriment(data['sodium']),
+      salt: parseNutriment(data['salt']),
+      energy: parseNutriment(data['energy']),
+    );
+  }
 }
 
 class NutritionFacts {
